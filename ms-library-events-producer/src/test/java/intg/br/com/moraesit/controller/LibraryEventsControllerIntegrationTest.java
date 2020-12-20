@@ -6,10 +6,7 @@ import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.IntegerDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -54,6 +51,7 @@ public class LibraryEventsControllerIntegrationTest {
     }
 
     @Test
+    @Timeout(3)
     @DisplayName("POST library event with successfully")
     void postLibraryEventTest() throws InterruptedException {
         //given
@@ -81,7 +79,7 @@ public class LibraryEventsControllerIntegrationTest {
         assertEquals(HttpStatus.CREATED, exchange.getStatusCode());
 
         ConsumerRecord<Integer, String> consumerRecord = KafkaTestUtils.getSingleRecord(consumer, "library-events");
-        Thread.sleep(3000);
+        //Thread.sleep(3000);
 
         String expectedRecord = "{\"libraryEventId\":null,\"libraryEventType\":\"NEW\",\"book\":{\"bookId\":123,\"bookName\":\"Kafka with Spring Boot\",\"bookAuthor\":\"Joao Pedro Moraes\",\"bookIsbn\":\"1232323232323\"}}";
         String value = consumerRecord.value();
