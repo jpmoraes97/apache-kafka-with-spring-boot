@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -51,7 +52,7 @@ public class LibraryEventsControllerUnitTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(libraryEvent));
 
-        doNothing().when(libraryEventProducer).sendLibraryEvent_Approach3(isA(LibraryEvent.class));
+        when(libraryEventProducer.sendLibraryEvent_Approach3(isA(LibraryEvent.class))).thenReturn(null);
 
         //when
         mvc.perform(request)
@@ -73,7 +74,7 @@ public class LibraryEventsControllerUnitTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(libraryEvent));
 
-        doNothing().when(libraryEventProducer).sendLibraryEvent_Approach3(isA(LibraryEvent.class));
+        when(libraryEventProducer.sendLibraryEvent_Approach3(isA(LibraryEvent.class))).thenReturn(null);
 
         //when
         mvc.perform(request)
