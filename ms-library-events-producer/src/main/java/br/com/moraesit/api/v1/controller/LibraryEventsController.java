@@ -1,4 +1,4 @@
-package br.com.moraesit.api.controller;
+package br.com.moraesit.api.v1.controller;
 
 import br.com.moraesit.domain.LibraryEvent;
 import br.com.moraesit.domain.LibraryEventType;

@@ -1,6 +1,6 @@
 package br.com.moraesit.controller;
 
-import br.com.moraesit.api.controller.LibraryEventsController;
+import br.com.moraesit.api.v1.controller.LibraryEventsController;
 import br.com.moraesit.domain.Book;
 import br.com.moraesit.domain.LibraryEvent;
 import br.com.moraesit.producer.LibraryEventProducer;
@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -57,6 +58,28 @@ public class LibraryEventsControllerUnitTest {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("book.bookName").value("Kafka with Spring Boot"))
+                .andReturn();
+    }
+
+    @Test
+    void postLibraryEventTest_4xx() throws Exception {
+        //given
+        LibraryEvent libraryEvent = LibraryEvent.builder()
+                .libraryEventId(null)
+                .book(null)
+                .build();
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/v1/library-event")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(libraryEvent));
+
+        doNothing().when(libraryEventProducer).sendLibraryEvent_Approach3(isA(LibraryEvent.class));
+
+        //when
+        mvc.perform(request)
+                .andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("fields", hasSize(1)))
                 .andReturn();
     }
 }
