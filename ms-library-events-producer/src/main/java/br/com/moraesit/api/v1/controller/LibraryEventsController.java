@@ -7,10 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.concurrent.ExecutionException;
@@ -35,6 +32,20 @@ public class LibraryEventsController {
         libraryEventProducer.sendLibraryEvent_Approach3(libraryEvent);
 
         return ResponseEntity.status(HttpStatus.CREATED)
+                .body(libraryEvent);
+    }
+
+    @PutMapping
+    public ResponseEntity<?> putLibraryEvent(@RequestBody @Valid LibraryEvent libraryEvent) throws
+            JsonProcessingException, ExecutionException, InterruptedException, TimeoutException {
+        //invoke kafka producer
+        if (libraryEvent.getLibraryEventId() == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please pass the libraryEventId");
+
+        libraryEvent.setLibraryEventType(LibraryEventType.UPDATE);
+        libraryEventProducer.sendLibraryEvent_Approach3(libraryEvent);
+
+        return ResponseEntity.status(HttpStatus.OK)
                 .body(libraryEvent);
     }
 
