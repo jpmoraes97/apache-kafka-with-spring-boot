@@ -23,6 +23,9 @@ dependencies {
 	implementation 'org.springframework.kafka:spring-kafka'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	compile group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.0.19.Final'
+
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
